@@ -1,15 +1,18 @@
+// Clase Church para representar los numeros naturales con funciones
 abstract class Church {
     abstract Church suma(Church n);
     abstract Church multiplicacion(Church n);
     abstract int valor();
 }
 
+// Clase Zero que representa el cero
 class Zero extends Church {
     Church suma(Church n) {return n;}
     Church multiplicacion(Church n) {return new Zero();}
     int valor() {return 0;}
 }
 
+// Clase Suc que representa el sucesor de un numero
 class Suc extends Church {
     Church n;
     Suc(Church n) {this.n = n;}
@@ -18,8 +21,9 @@ class Suc extends Church {
     int valor() {return 1 + this.n.valor();}
 }
 
+// Clase Churchs que contiene el metodo main
 public class Churchs {
-    
+    // Metodo main
     public static void main(String[] args) {
         Church cero = new Zero();
         Church uno = new Suc(cero);

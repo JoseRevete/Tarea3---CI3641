@@ -83,38 +83,38 @@ class ManejadorTipoDatos:
         print(f"Empaquetado: Tamaño = {tamaño}, Alineación = {alineación}, Desperdicio = {desperdicio}")
 
         # Reordenando los tipos de datos de mayor a menor tamaño
-        tipos_reordenados = sorted(tipos, key=lambda t: ManejadorTipoDatos.almacenDeTipo[t][1], reverse=True)
-        tamaño, alineación, desperdicio = self.calcularTamaño(tipos_reordenados, empaquetar=True)
+        tiposReordenados = sorted(tipos, key=lambda t: ManejadorTipoDatos.almacenDeTipo[t][1], reverse=True)
+        tamaño, alineación, desperdicio = self.calcularTamaño(tiposReordenados, empaquetar=True)
         print(f"Reordenado: Tamaño = {tamaño}, Alineación = {alineación}, Desperdicio = {desperdicio}")
 
     # Funcion para calcular el tamaño, alineación y desperdicio de un registro variante
     def calcularUnion(self, tipos):
         # Calculando sin empaquetar, empaquetado y reordenado
-        max_tamaño, max_alineación = 0, 0
+        maxTamaño, maxAlineación = 0, 0
         for tipo in tipos:
             tamaño, alineación = ManejadorTipoDatos.almacenDeTipo[tipo]
-            max_tamaño = max(max_tamaño, tamaño)
-            max_alineación = max(max_alineación, alineación)
-        desperdicio = max_alineación - (max_tamaño % max_alineación) if max_tamaño % max_alineación != 0 else 0
-        print(f"Sin empaquetar: Tamaño = {max_tamaño}, Alineación = {max_alineación}, Desperdicio = {desperdicio}")
+            maxTamaño = max(maxTamaño, tamaño)
+            maxAlineación = max(maxAlineación, alineación)
+        desperdicio = maxAlineación - (maxTamaño % maxAlineación) if maxTamaño % maxAlineación != 0 else 0
+        print(f"Sin empaquetar: Tamaño = {maxTamaño}, Alineación = {maxAlineación}, Desperdicio = {desperdicio}")
         # Empaquetado (para union, empaquetado es igual a sin empaquetar)
-        print(f"Empaquetado: Tamaño = {max_tamaño}, Alineación = {max_alineación}, Desperdicio = {desperdicio}")
+        print(f"Empaquetado: Tamaño = {maxTamaño}, Alineación = {maxAlineación}, Desperdicio = {desperdicio}")
         # Reordenado (para union, reordenado es igual a sin empaquetar)
-        print(f"Reordenado: Tamaño = {max_tamaño}, Alineación = {max_alineación}, Desperdicio = {desperdicio}")
+        print(f"Reordenado: Tamaño = {maxTamaño}, Alineación = {maxAlineación}, Desperdicio = {desperdicio}")
 
     # Funcion para calcular el tamaño, alineación y desperdicio de un registro
     def calcularTamaño(self, tipos, empaquetar):
         # Calculando el tamaño, alineación y desperdicio de un registro
-        tamaño, alineación_max, offset = 0, 0, 0
+        tamaño, maxAlineación, offset = 0, 0, 0
         for tipo in tipos:
             tam, ali = ManejadorTipoDatos.almacenDeTipo[tipo]
-            alineación_max = max(alineación_max, ali)
+            maxAlineación = max(maxAlineación, ali)
             if not empaquetar:
                 offset = (offset + (ali - 1)) & ~(ali - 1)
             tamaño = offset + tam
             offset += tam
-        desperdicio = alineación_max - (tamaño % alineación_max) if tamaño % alineación_max != 0 else 0
-        return tamaño + desperdicio, alineación_max, desperdicio
+        desperdicio = maxAlineación - (tamaño % maxAlineación) if tamaño % maxAlineación != 0 else 0
+        return tamaño + desperdicio, maxAlineación, desperdicio
 
 # Funcion principal para leer los comandos y ejecutar las funciones correspondientes
 def main():
