@@ -105,14 +105,14 @@ class ManejadorTipoDatos:
     # Funcion para calcular el tamaño, alineación y desperdicio de un registro
     def calcularTamaño(self, tipos, empaquetar):
         # Calculando el tamaño, alineación y desperdicio de un registro
-        tamaño, maxAlineación, offset = 0, 0, 0
+        tamaño, maxAlineación, desplazamiento = 0, 0, 0
         for tipo in tipos:
             tam, ali = ManejadorTipoDatos.almacenDeTipo[tipo]
             maxAlineación = max(maxAlineación, ali)
             if not empaquetar:
-                offset = (offset + (ali - 1)) & ~(ali - 1)
-            tamaño = offset + tam
-            offset += tam
+                desplazamiento = (desplazamiento + (ali - 1)) & ~(ali - 1)
+            tamaño = desplazamiento + tam
+            desplazamiento += tam
         desperdicio = maxAlineación - (tamaño % maxAlineación) if tamaño % maxAlineación != 0 else 0
         return tamaño + desperdicio, maxAlineación, desperdicio
 
