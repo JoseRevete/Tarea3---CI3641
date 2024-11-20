@@ -1,75 +1,62 @@
 import java.util.*;
 import java.util.stream.Collectors;
 
-class Persona {
-    private final String nombre;
-    private final int edad;
+public class ConjuntoPersonas {
+    private final List<Map.Entry<String, Integer>> personas;
 
-    public Persona(String nombre, int edad) {
-        this.nombre = nombre;
-        this.edad = edad;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public int getEdad() {
-        return edad;
-    }
-
-    public String toString() {
-        return nombre + " (" + edad + " años)";
-    }
-}
-
-class ConjuntoDePersonas {
-    private final Set<Persona> personas;
-
-    public ConjuntoDePersonas() {
-        this.personas = new HashSet<>();
-    }
-
-    public void agregarPersona(Persona persona) {
-        personas.add(persona);
+    public ConjuntoPersonas(List<Map.Entry<String, Integer>> personas) {
+        this.personas = personas;
     }
 
     public int cantidadPersonas() {
         return personas.size();
     }
 
-    public Set<Persona> mayoresDeEdad() {
+    public List<Map.Entry<String, Integer>> mayoresDeEdad() {
         return personas.stream()
-                .filter(persona -> persona.getEdad() >= 18)
-                .collect(Collectors.toSet());
+                .filter(entry -> entry.getValue() >= 18)
+                .collect(Collectors.toList());
     }
 
     public String nombreMasComun() {
-        Map<String, Long> frecuencia = personas.stream()
-                .collect(Collectors.groupingBy(Persona::getNombre, Collectors.counting()));
-
-        return frecuencia.entrySet().stream()
-                .max(Comparator.comparingLong(Map.Entry::getValue))
-                .map(Map.Entry::getKey)
-                .orElse(null);
+        Map<String, Long> frecuencia = new HashMap<>();
+    
+        for (Map.Entry<String, Integer> persona : personas) {
+            String nombre = persona.getKey();
+            frecuencia.put(nombre, frecuencia.getOrDefault(nombre, 0L) + 1);
+        }
+    
+        String nombreMasComun = null;
+        long maxFrecuencia = 0;
+    
+        for (Map.Entry<String, Long> entrada : frecuencia.entrySet()) {
+            if (entrada.getValue() > maxFrecuencia) {
+                nombreMasComun = entrada.getKey();
+                maxFrecuencia = entrada.getValue();
+            }
+        }
+    
+        return nombreMasComun;
     }
-}
 
-public class ConjuntoPersonas {
     public static void main(String[] args) {
-        ConjuntoDePersonas conjunto = new ConjuntoDePersonas();
+        List<Map.Entry<String, Integer>> personas = new ArrayList<>(Arrays.asList(
+            new AbstractMap.SimpleEntry<>("Ana", 20),
+            new AbstractMap.SimpleEntry<>("Luis", 17),
+            new AbstractMap.SimpleEntry<>("Ana", 22),
+            new AbstractMap.SimpleEntry<>("Juan", 15),
+            new AbstractMap.SimpleEntry<>("Luis", 18),
+            new AbstractMap.SimpleEntry<>("Ana", 19)
+        ));
 
-        conjunto.agregarPersona(new Persona("Ana", 20));
-        conjunto.agregarPersona(new Persona("Luis", 17));
-        conjunto.agregarPersona(new Persona("Ana", 22));
-        conjunto.agregarPersona(new Persona("Juan", 15));
-        conjunto.agregarPersona(new Persona("Luis", 18));
-        conjunto.agregarPersona(new Persona("Ana", 19));
+        ConjuntoPersonas conjunto = new ConjuntoPersonas(personas);
 
         System.out.println("Cantidad de personas: " + conjunto.cantidadPersonas());
 
         System.out.println("Mayores de edad:");
-        conjunto.mayoresDeEdad().forEach(System.out::println);
+        conjunto.mayoresDeEdad().forEach(entry -> 
+            System.out.println(entry.getKey() + " (" + entry.getValue() + " años)")
+        );
 
         System.out.println("Nombre más común: " + conjunto.nombreMasComun());
     }
