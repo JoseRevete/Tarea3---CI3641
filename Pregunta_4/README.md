@@ -9,3 +9,4 @@ Para tiempos de ejecucion:
 2. Se muestran en la terminal
 3. La imagen Muestra.png, muestra el grafico de los tiempos
 4. Para obtener el grafico en tiempo real, se debe ejecutar con la extension de VS Code de Live Server
+5. En resultadosEStaticos.csv estan los resultados del recorrido Estatico
